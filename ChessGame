@@ -167,3 +167,23 @@ public class Piece
         return this.white;
     }
 }
+
+/**
+ * Write a description of class Pawn here.
+ *
+ * @author (your name)
+ * @version (a version number or a date)
+ */
+public class Pawn extends Piece
+{
+    public int[] newPosition;
+    public Pawn(String icon, String type, int[] position, boolean white, int[] finalPosition)
+    {
+        super(icon, type, position, white);
+        newPosition = finalPosition;
+    }   
+    public void updatePosition(int[] newPos)
+    {
+        newPosition = newPos;
+    }
+}
