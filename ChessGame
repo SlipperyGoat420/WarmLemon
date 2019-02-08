@@ -112,3 +112,58 @@ public class Board
         return board;
     }
 }
+
+/**
+ * Chess Pieces.
+ * King can move exactly one square horizontally, vertically, or diagonally.
+ * Queen can move any number of vacant squares diagonally, horizontally, or vertically.
+ * Rook can move any number of vacant squares vertically or horizontally.
+ * Bishop can move any number of vacant squares in any diagonal direction.
+ * Knight can move one square along any rank or file and then at an angle. 
+ * Pawns can move forward one square.
+ * @author (Dylan Narkawicz) 
+ * @version (02.05.19)
+ */
+public class Piece
+{
+    private String type;
+    private String icon;
+    private int[] position;
+    private boolean white;
+    private boolean unmoved;
+    private String pawn = "\u256f";
+    // Inintializes a piece
+    public Piece(String icon, String type, int[] position, boolean white)
+    {
+        this.icon = icon;
+        this.type = type;
+        this.position = new int[] {position[0], position[1]};
+        this.white = white;
+        this.unmoved = true;
+    }
+    public String getIcon()
+    {
+        return this.icon;
+    }
+    public String getType()
+    {
+        return this.type;
+    }
+    public int[] getPosition()
+    {
+        return this.position;
+    }
+    public Piece setPosition(int[] pos)
+    {
+        this.position = pos;
+        return this;
+    }
+    public void updatePosition(int[] pos)
+    {
+        this.position = pos;
+    }
+    public boolean getColor()
+    {
+        return this.white;
+    }
+}
