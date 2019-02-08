@@ -34,3 +34,81 @@ public class PlayGame
         }
     }
 }
+
+/**
+ * Sets up a board for a game of Chess.
+ * 
+ * @author (Dylan Narkawicz) 
+ * @version (02.05.19)
+ **/
+public class Board
+{
+    private Piece[][] grid = new Piece[8][8];
+    private Player p1 = new Player();
+    private Player p2 = new Player();
+    public Board()
+    {
+        for (int row = 0; row < grid.length; row++)
+        {
+            for (int col = 0; col < grid.length; col++)
+            {
+                this.grid[row][col] = new Piece("\u2610", "Empty", new int[] {row, col}, true);
+            }
+        }
+    }
+    public Piece[][] setup()
+    {
+        int x = 0;
+        int y = 0;
+        for (int col = 0; col < grid.length; col++)
+        {
+            grid[1][col] = new Piece("\u265f", "Pawn", new int[] {1,col}, false);
+            grid[6][col] = new Piece("\u2659", "Pawn", new int[] {6,col}, true);
+        }
+        grid[x][y] = grid[7][0] = grid[7][7] = new Piece("\u2656", "Rook", new int[] {x, y}, true);
+        grid[x][y] = grid[7][1] = grid[7][6] = new Piece("\u2658", "Knight", new int[] {x, y}, true);
+        grid[x][y] = grid[7][2] = grid[7][5] = new Piece("\u2657", "Bishop", new int[] {x, y}, true);
+        grid[x][y] = grid[0][0] = grid[0][7] = new Piece("\u265c", "Rook", new int[] {x, y}, false);
+        grid[x][y] = grid[0][1] = grid[0][6] = new Piece("\u265e", "Knight", new int[] {x, y}, false);
+        grid[x][y] = grid[0][2] = grid[0][5] = new Piece("\u265d", "Bishop", new int[] {x, y}, false);
+        grid[7][4] = new Piece("\u2655", "Queen", new int[] {x, y}, true);
+        grid[7][3] = new Piece("\u2654", "King", new int[] {x, y}, true);
+        grid[0][3] = new Piece("\u265b", "Queen", new int[] {x, y}, false);
+        grid[0][4] = new Piece("\u265a", "King", new int[] {x, y}, false);
+        return grid;
+    }
+    public Piece getPiece(int[] pos)
+    {
+        return grid[pos[0]][pos[1]];
+    }
+    public void movePiece(Piece piece, int[] pos)
+    {
+        this.grid[piece.getPosition()[0]][piece.getPosition()[1]] = new Piece("\u2610", "Empty", new int[] {piece.getPosition()[0], piece.getPosition()[1]}, true);
+        this.grid[pos[0]][pos[1]] = piece.setPosition(pos);
+        //System.out.print(coordinates[0] + " " + coordinates[1]);
+    }
+    public void displayBoard()
+    {
+        for (int row = 0; row < grid.length; row++)
+        {
+            for (int col = 0; col < grid.length; col++)
+            {
+                System.out.print(grid[row][col].getIcon() + " ");
+            }
+            System.out.println();
+        }
+    }
+    public String toString()
+    {
+        String board = "";
+        for (int row = 0; row < grid.length; row++)
+        {
+            for (int col = 0; col < grid.length; col++)
+            {
+                board += this.grid[row][col];
+            }
+            board += "\n";
+        }
+        return board;
+    }
+}
