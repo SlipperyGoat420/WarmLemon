@@ -1,0 +1,36 @@
+/**
+ * Write a description of class Play here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+import java.util.Scanner;
+
+public class PlayGame
+{
+    public static void main(String[] args)
+    {
+        Chess game = new Chess();
+        Board grid = new Board();
+        grid.setup();
+        grid.displayBoard();
+        int[] initialPos = new int[2];
+        int[] finalPos = new int[2];
+        Scanner input = new Scanner(System.in);
+        while (initialPos[0] != -1)
+        {
+            System.out.print("Enter the y coordinate of the piece to move: ");
+            initialPos[0] = input.nextInt();
+            System.out.print("Enter the x coordinate of the piece to move: ");
+            initialPos[1] = input.nextInt();
+            System.out.print("Enter the y coordinate of the spot to move to: ");
+            finalPos[0] = input.nextInt();
+            System.out.print("Enter the x coordinate of the spot to move to: ");
+            finalPos[1] = input.nextInt();
+            grid.movePiece(grid.getPiece(initialPos), finalPos);
+            grid.getPiece(initialPos).updatePosition(finalPos);
+            System.out.println(grid.getPiece(initialPos).getPosition()[0] + " " + grid.getPiece(initialPos).getPosition()[1]);
+            grid.displayBoard();
+        }
+    }
+}
