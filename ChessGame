@@ -16,6 +16,7 @@ public class PlayGame
         grid.displayBoard();
         int[] initialPos = new int[2];
         int[] finalPos = new int[2];
+        boolean turn = true;
         Scanner input = new Scanner(System.in);
         while (initialPos[0] != -1)
         {
@@ -27,10 +28,25 @@ public class PlayGame
             finalPos[0] = input.nextInt();
             System.out.print("Enter the x coordinate of the spot to move to: ");
             finalPos[1] = input.nextInt();
-            grid.movePiece(grid.getPiece(initialPos), finalPos);
-            grid.getPiece(initialPos).updatePosition(finalPos);
-            System.out.println(grid.getPiece(initialPos).getPosition()[0] + " " + grid.getPiece(initialPos).getPosition()[1]);
-            grid.displayBoard();
+            if (grid.getPiece(initialPos).getColor() == turn)
+            {
+                grid.movePiece(grid.getPiece(initialPos), finalPos);
+                grid.getPiece(initialPos).updatePosition(finalPos);
+                if (grid.getPiece(initialPos).getColor() == true)
+                {
+                    turn = false;
+                }
+                else if (grid.getPiece(initialPos).getColor() == false)
+                {
+                    turn = true;
+                }
+                grid.displayBoard();
+            }
+            else
+            {
+                System.out.println(grid.getPiece(initialPos).getPosition()[0] + " " + grid.getPiece(initialPos).getPosition()[1]);
+                System.out.println("Wrong color!");
+            }
         }
     }
 }
@@ -126,11 +142,11 @@ public class Board
  */
 public class Piece
 {
-    private String type;
-    private String icon;
-    private int[] position;
-    private boolean white;
-    private boolean unmoved;
+    public String type;
+    public String icon;
+    public int[] position;
+    public boolean white;
+    public boolean unmoved;
     private String pawn = "\u256f";
     // Inintializes a piece
     public Piece(String icon, String type, int[] position, boolean white)
@@ -165,6 +181,10 @@ public class Piece
     public boolean getColor()
     {
         return this.white;
+    }
+    public String toString()
+    {
+        return(type + ": " + icon);
     }
 }
 
