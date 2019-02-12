@@ -1,0 +1,57 @@
+
+/**
+ * FUCK! SHIT! BITCH! YOUNG SHEK WES!
+ *
+ * @author (your name)
+ * @version (a version number or a date)
+ */
+import java.util.Scanner;
+
+public class Wokeness
+{
+    public static void main(String[] args)
+    {
+        Wokeness woke = new Wokeness();
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Would you like to input data or view all possibilities? Respond: \"INPUT\" or \"VIEW\"");
+        String input = scan.nextLine();
+        if (input.equals("INPUT"))
+        {
+            woke.input();
+        }
+        else 
+        {
+            woke.possibilities();
+        }
+    }
+    public void input()
+    {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Enter the number of active members: ");
+        int input = scan.nextInt();
+        int members = input / 6;
+        System.out.println("Enter the memage on a scale of 1 to 10: ");        
+        int input2 = scan.nextInt();
+        int memage = input2 * 10;
+        
+        int wokeness = members * memage;
+        System.out.println("Wokeness Level: " + wokeness + "%");        
+    }
+    public double calculate(int numMembers, int memageLevel)
+    {
+        double members = numMembers / 6.0;
+        double memage = memageLevel * 10.0;
+        double wokeness = members * memage;
+        return wokeness;
+    }
+    public void possibilities()
+    {
+        for (int members = 0; members <= 6; members++)
+        {
+            for (int memage = 0; memage <= 10; memage++)
+            {
+                System.out.print("Members:" + members + " " + "Memage:" + memage + " " + "Wokeness:" + calculate(members, memage) + "%" + "\n");
+            }
+        }
+    }
+}
