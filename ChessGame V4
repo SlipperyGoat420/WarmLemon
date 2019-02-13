@@ -1,0 +1,370 @@
+/**
+ * Sets up a board for a game of Chess.
+ * 
+ * @author (Dylan Narkawicz) 
+ * @version (02.05.19)
+ **/
+public class Board
+{
+    private Piece[][] grid = new Piece[8][8];
+    private Player p1 = new Player();
+    private Player p2 = new Player();
+    private int[] newPosition;
+    public Board()
+    {
+        for (int row = 0; row < grid.length; row++)
+        {
+            for (int col = 0; col < grid.length; col++)
+            {
+                this.grid[row][col] = new Empty("\u2610", "Empty", new int[] {row, col}, true, new int[] {row, col});
+            }
+        }
+    }
+    public Piece[][] setup()
+    {
+        for (int col = 0; col < grid.length; col++)
+        {
+            grid[1][col] = new Pawn("\u265f", "Pawn", new int[] {1,col}, false, new int[] {1,col});
+            grid[6][col] = new Pawn("\u2659", "Pawn", new int[] {6,col}, true, new int[] {6,col});
+        }
+        grid[7][0] = new Rook("\u2656", "Rook", new int[] {7, 0}, true, new int[] {7, 0});
+        grid[7][7] = new Rook("\u2656", "Rook", new int[] {7, 7}, true, new int[] {7, 7});
+        grid[7][1] = new Knight("\u2658", "Knight", new int[] {7, 1}, true, new int[] {7, 1});
+        grid[7][6] = new Knight("\u2658", "Knight", new int[] {7, 6}, true, new int[] {7, 6});
+        grid[7][2] = new Bishop("\u2657", "Bishop", new int[] {7, 2}, true, new int[] {7, 2});
+        grid[7][5] = new Bishop("\u2657", "Bishop", new int[] {7, 5}, true, new int[] {7, 5});
+        grid[0][0] = new Rook("\u265c", "Rook", new int[] {0 ,0}, false, new int[] {0, 0});
+        grid[0][7] = new Rook("\u265c", "Rook", new int[] {0, 7}, false, new int[] {0, 7});
+        grid[0][1] = new Knight("\u265e", "Knight", new int[] {0, 1}, false, new int[] {0, 1});
+        grid[0][6] = new Knight("\u265e", "Knight", new int[] {0, 6}, false, new int[] {0, 6});
+        grid[0][2] = new Bishop("\u265d", "Bishop", new int[] {0, 2}, false, new int[] {0, 2});
+        grid[0][5] = new Bishop("\u265d", "Bishop", new int[] {0, 5}, false, new int[] {0, 5});
+        grid[7][4] = new Queen("\u2655", "Queen", new int[] {7, 4}, true, new int[] {7, 4});
+        grid[7][3] = new King("\u2654", "King", new int[] {7, 3}, true, new int[] {7, 3});
+        grid[0][3] = new Queen("\u265b", "Queen", new int[] {0, 3}, false, new int[] {0, 3});
+        grid[0][4] = new King("\u265a", "King", new int[] {0, 4}, false, new int[] {0, 4});
+        return grid;
+    }
+    public Piece getPiece(int[] pos)
+    {
+        return grid[pos[0]][pos[1]];
+    }
+    public void movePiece(Piece piece, int[] pos)
+    {
+        Piece empty = new Empty("\u2610", "Empty", new int[] {piece.getCurrentPos()[0], piece.getCurrentPos()[1]}, true, new int[] {piece.getCurrentPos()[0], piece.getCurrentPos()[1]});
+        this.grid[piece.getCurrentPos()[0]][piece.getCurrentPos()[1]] = empty;
+        piece.setCurrentPos(pos);
+        this.grid[pos[0]][pos[1]] = piece;
+        piece.updatePosition(pos);
+        //System.out.print(coordinates[0] + " " + coordinates[1]);
+    }
+    public void displayBoard()
+    {
+        for (int row = 0; row < grid.length; row++)
+        {
+            for (int col = 0; col < grid.length; col++)
+            {
+                System.out.print(grid[row][col].getIcon() + " ");
+            }
+            System.out.println();
+        }
+    }
+    public String toString()
+    {
+        String board = "";
+        for (int row = 0; row < grid.length; row++)
+        {
+            for (int col = 0; col < grid.length; col++)
+            {
+                board += this.grid[row][col];
+            }
+            board += "\n";
+        }
+        return board;
+    }
+}
+
+/**
+ * Write a description of class Play here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+import java.util.Scanner;
+
+public class PlayGame
+{
+    public static void main(String[] args)
+    {
+        Chess game = new Chess();
+        Board grid = new Board();
+        //System.out.println(game.help());
+        grid.setup();
+        grid.displayBoard();
+        int[] initialPos = new int[2];
+        int[] finalPos = new int[2];
+        Scanner input = new Scanner(System.in);
+        while (initialPos[0] != -1)
+        {
+            System.out.print("Enter the y coordinate of the piece to move: ");
+            initialPos[0] = input.nextInt();
+            System.out.print("Enter the x coordinate of the piece to move: ");
+            initialPos[1] = input.nextInt();
+            System.out.print("Enter the y coordinate of the spot to move to: ");
+            finalPos[0] = input.nextInt();
+            System.out.print("Enter the x coordinate of the spot to move to: ");
+            finalPos[1] = input.nextInt();
+            //grid.movePiece(grid.getPiece(initialPos), finalPos);
+            game.action(initialPos, finalPos);
+            game.checkmate(finalPos);
+            //grid.getPiece(initialPos).updatePosition(finalPos);
+        }
+    }
+}
+
+/**
+ * Chess Pieces.
+ * King can move exactly one square horizontally, vertically, or diagonally.
+ * Queen can move any number of vacant squares diagonally, horizontally, or vertically.
+ * Rook can move any number of vacant squares vertically or horizontally.
+ * Bishop can move any number of vacant squares in any diagonal direction.
+ * Knight can move one square along any rank or file and then at an angle. 
+ * Pawns can move forward one square.
+ * @author (Dylan Narkawicz) 
+ * @version (02.05.19)
+ */
+public class Piece
+{
+    private String type;
+    private String icon;
+    private int[] position;
+    private boolean white;
+    private boolean unmoved;
+    private int[] currentPos;
+    private int[] newPosition;
+    public Piece(String icon, String type, int[] position, boolean white, int[] currentPos)
+    {
+        this.icon = icon;
+        this.type = type;
+        this.position = new int[] {position[0], position[1]};
+        this.white = white;
+        this.unmoved = true;
+        this.currentPos = new int[] {currentPos[0], currentPos[1]};
+        newPosition = currentPos;
+    }
+    public String getIcon()
+    {
+        return this.icon;
+    }
+    public String getType()
+    {
+        return this.type;
+    }
+    public int[] getPosition()
+    {
+        return this.position;
+    }
+    public void setCurrentPos(int[] pos)
+    {
+        this.currentPos = pos;
+        //return this;
+    }
+    public Piece updatePosition(int[] pos)
+    {
+        this.currentPos = pos;
+        return this;
+    }
+    public int[] getCurrentPos()
+    {
+        return this.currentPos;
+    }
+    public boolean getColor()
+    {
+        return this.white;
+    }
+    public String toString()
+    {
+        return "" + getPosition()[0] + getPosition()[1] + getCurrentPos()[0] + getCurrentPos()[1];  
+    }
+}
+
+/*
+ * Black:
+ * King - \u256a 
+ * Queen - \u256b
+ * Rook - \u256c
+ * Bishop - \u256d
+ * Knight - \u256e
+ * Pawn - \u256f
+ * 
+ * White:
+ * King - \u2564
+ * Queen - \u2565
+ * Rook - \u2566
+ * Bishop - \u2567
+ * Knight - \u2568
+ * Pawn - \u2569
+ * 
+ * public String Knight()
+    {
+        
+    }
+    public class Bishop() extends Piece
+    {
+        
+    }
+    public Piece Rook()
+    {
+        
+    }
+    public Piece Queen()
+    {
+        
+    }
+    public Piece King()
+    {
+        
+    }
+ */
+ 
+ /**
+ * Write a description of class Chess here.
+ * King can move exactly one square horizontally, vertically, or diagonally.
+ * Queen can move any number of vacant squares diagonally, horizontally, or vertically.
+ * Rook can move any number of vacant squares vertically or horizontally.
+ * Bishop can move any number of vacant squares in any diagonal direction.
+ * Knight can move one square along any rank or file and then at an angle. 
+ * Pawns can move forward one square.
+ * @author (Dylan Narkawicz)
+ * @version (02.05.19)
+ */
+public class Chess
+{
+    private Board grid = new Board();
+    public Chess()
+    {        
+        this.grid.setup();
+        this.grid.toString();
+    }    
+    public String help()
+    {
+        String rules = "How to Play Chess: Rules and Basics" + "\n" + "Step 1. Find out Who Makes the First Move in Chess" + "\n" + "The player with the white pieces always moves first." 
+                        + "\n" + "Step 2. How the Chess Pieces Move" + "\n" + "Each of the 6 different kinds of pieces moves differently. Pieces cannot move through other pieces (though the knight can jump over other pieces) and can"
+                        + "\n" + "never move onto a square with one of their own pieces. However, they can be moved to take the place of an opponent's piece which is then captured." 
+                        + "\n" + "How to Move the King in Chess." + "\n" + "The king can only move one square in any direction - up, down, to the sides, and diagonally. The king may never move himself into check (where he could be"
+                        + "\n" + "captured). When the king is attacked by another piece this is called \"check\"." + "\n" + "How to Move the Queen in Chess" 
+                        + "\n" + "The queen is the most powerful piece. She can move in any one straight direction - forward, backward, sideways," 
+                        + "\n" + "or diagonally - as far as possible as long as she does not move through any of her own pieces."+ "\n" + "How to Move the Rook in Chess" 
+                        + "\n" + "The rook may move as far as it wants, but only forward, backward, and to the sides." + "\n" + "How to Move the Bishop in Chess"      
+                        + "\n" + "The bishop may move as far as it wants, but only diagonally." + "\n" + "How to Move the Knight in Chess" + "\n" + "Knights move in a very different way from the other pieces – going two squares in" 
+                        + "\n" + "one direction, and then one more move at a 90 degree angle." + "\n" + "How to Move the Pawn in Chess" + "\n" + "Pawns are unusual because they move and capture in different ways: they move forward but capture diagonally. Pawns can"
+                        + "\n" + "only move forward one square at a time, except for their very first move where they can move forward two squares. Pawns can only capture one square diagonally in"
+                        + "\n" + "front of them. They can never move or capture backwards. If there is another piece directly in front of a pawn, he cannot move past or capture that piece." 
+                        + "\n" + "Step 3. Discover the Special Rules of Chess" + "\n" + "How to Promote a Pawn in Chess" + "\n" + "Pawns have another special ability and that is that if a pawn reaches the other side of the board it can become any other chess piece (called promotion)." 
+                        + "\n" + "A pawn may be promoted to any piece. A common misconception is that pawns may only be exchanged for a piece that has been captured."
+                        + "\n" + "That is NOT true. A pawn is usually promoted to a queen. Only pawns may be promoted." + "\n" + "Step 4. Review the Rules of How to Win a Game of Chess" + "\n" + "There are two ways to end a game of chess:"
+                        + "\n" + "by checkmate, or with a draw." + "\n" + "How to Checkmate in Chess" + "\n" + "The purpose of the game is to checkmate the opponent's king. This happens when the king is put into check and cannot"
+                        + "\n" + "get out of check. There are only three ways a king can get out of check: move out of the way, block the check with another piece,"
+                        + "\n" + "or capture the piece threatening the king. If a king cannot escape checkmate, then the game is over. " + "\n" + "How to Draw a Chess Game" + "\n" + "Occasionally chess games do not end with a winner, but with a draw. There are 5 reasons why a chess game may end in a draw:" 
+                        + "\n" + "•The position reaches a stalemate where it is one player's turn to move, but his king is NOT in check and yet he does not have another legal move"
+                        + "\n" + "•The players may simply agree to a draw and stop playing" + "\n" + "•There are not enough pieces on the board to force a checkmate (example: a king and a bishop vs. a king)"
+                        + "\n" + "•A player declares a draw if the same exact position is repeated three times (though not necessarily three times in a row)"
+                        + "\n" + "•Fifty consecutive moves have been played where neither player has moved a pawn or captured a piece";
+        return rules;
+    }
+    public void checkmate(int[] finalPos)
+    {
+        if (grid.getPiece(finalPos).getType() == "King")
+        {
+            System.out.println("Winner");
+        }
+    }
+    public void action(int[] initialPos, int[] finalPos)
+    {
+        if (grid.getPiece(initialPos).getType() == "Empty")
+        {
+            System.out.println("Invalid Move");
+        }
+        if (grid.getPiece(initialPos).getType() == "Pawn")
+        {
+            if (Pawn.checkMove(initialPos, finalPos) == true)
+            {
+                grid.movePiece(grid.getPiece(initialPos), finalPos);
+                grid.getPiece(initialPos).updatePosition(finalPos);
+                //grid.updateBoard();
+            }
+            else
+            {
+                System.out.println("Invalid Move");
+            }
+            System.out.println(grid.getPiece(initialPos).toString());
+        }
+        if (grid.getPiece(initialPos).getType() == "Rook")
+        {
+            if (Rook.checkMove(initialPos, finalPos) == true)
+            {
+                grid.movePiece(grid.getPiece(initialPos), finalPos);
+                grid.getPiece(initialPos).updatePosition(finalPos);
+                //grid.updateBoard();
+            }
+            else
+            {
+                System.out.println("Invalid Move");
+            }
+        }
+        if (grid.getPiece(initialPos).getType() == "Knight")
+        {
+            if (Knight.checkMove(initialPos, finalPos) == true)
+            {
+                grid.movePiece(grid.getPiece(initialPos), finalPos);
+                grid.getPiece(initialPos).updatePosition(finalPos);
+                //grid.updateBoard();
+            }
+            else
+            {
+                System.out.println("Invalid Move");
+            }
+        }
+        if (grid.getPiece(initialPos).getType() == "Bishop")
+        {
+            if (Bishop.checkMove(initialPos, finalPos) == true)
+            {
+                grid.movePiece(grid.getPiece(initialPos), finalPos);
+                grid.getPiece(initialPos).updatePosition(finalPos);
+                //grid.updateBoard();
+            }
+            else
+            {
+                System.out.println("Invalid Move");
+            }
+        }
+        if (grid.getPiece(initialPos).getType() == "Queen")
+        {
+            if (Queen.checkMove(initialPos, finalPos) == true)
+            {
+                grid.movePiece(grid.getPiece(initialPos), finalPos);
+                grid.getPiece(initialPos).updatePosition(finalPos);
+                //grid.updateBoard();
+            }
+            else
+            {
+                System.out.println("Invalid Move");
+            }
+        }
+        if (grid.getPiece(initialPos).getType() == "King")
+        {
+            if (King.checkMove(initialPos, finalPos) == true)
+            {
+                grid.movePiece(grid.getPiece(initialPos), finalPos);
+                grid.getPiece(initialPos).updatePosition(finalPos);
+                //grid.updateBoard();
+            }
+            else
+            {
+                System.out.println("Invalid Move");
+            }
+        }
+        grid.displayBoard();
+    }
+}
+ 
