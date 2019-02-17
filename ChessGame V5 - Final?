@@ -32,7 +32,7 @@ public class PlayGame
             {
                 game.action(initialPos, finalPos);
                 break;
-            }
+            } 
             else
             {
                 game.action(initialPos, finalPos);
