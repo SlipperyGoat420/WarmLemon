@@ -1,0 +1,177 @@
+
+/**
+ * Write a description of class Empty here.
+ *
+ * @author (your name)
+ * @version (a version number or a date)
+ */
+public class Empty extends Piece
+{
+    public int[] newPosition;
+    public Empty(String icon, String type, int[] position, boolean white, int[] finalPos)
+    {
+        super(icon, type, position, white, finalPos);
+        newPosition = finalPos;
+    }   
+}
+
+
+/**
+ * Write a description of class Empty here.
+ *
+ * @author (your name)
+ * @version (a version number or a date)
+ */
+public class Empty extends Piece
+{
+    public int[] newPosition;
+    public Empty(String icon, String type, int[] position, boolean white, int[] finalPos)
+    {
+        super(icon, type, position, white, finalPos);
+        newPosition = finalPos;
+    }   
+}
+
+
+/**
+ * Write a description of class Rook here.
+ *
+ * @author (your name)
+ * @version (a version number or a date)
+ */
+public class Rook extends Piece
+{
+    public int[] newPosition;
+    public Rook(String icon, String type, int[] position, boolean white, int[] finalPos)
+    {
+        super(icon, type, position, white, finalPos);
+        newPosition = finalPos;
+    }   
+    public static boolean checkMove(int[] startPos, int[] endPos)
+    {
+        if ((startPos[0] == endPos[0]) || (startPos[1] == endPos[1]))
+        {
+            return true;
+        }
+        else 
+        {
+            return false;
+        }
+    }
+}
+
+
+/**
+ * Write a description of class Knight here.
+ *
+ * @author (your name)
+ * @version (a version number or a date)
+ */
+public class Knight extends Piece
+{
+    public int[] newPosition;
+    public Knight(String icon, String type, int[] position, boolean white, int[] finalPos)
+    {
+        super(icon, type, position, white, finalPos);
+        newPosition = finalPos;
+    }   
+    public static boolean checkMove(int[] startPos, int[] endPos)
+    {
+        if ((Math.abs(endPos[0]-startPos[0]) == 2 && Math.abs(endPos[1]-startPos[1]) == 1) || (Math.abs(endPos[0]-startPos[0]) == 1 && Math.abs(endPos[1]-startPos[1]) == 2))
+        {
+            return true;
+        }
+        else 
+        {
+            return false;
+        }
+    }
+}
+
+
+/**
+ * Write a description of class Bishop here.
+ *
+ * @author (your name)
+ * @version (a version number or a date)
+ */
+public class Bishop extends Piece
+{
+    public int[] newPosition;
+    public Bishop(String icon, String type, int[] position, boolean white, int[] finalPos)
+    {
+        super(icon, type, position, white, finalPos);
+        newPosition = finalPos;
+    }   
+    public static boolean checkMove(int[] startPos, int[] endPos)
+    {
+        if (Math.abs(endPos[0] - startPos[0]) != Math.abs(endPos[1] - startPos[1]))
+        {
+            return false;
+        }
+        else 
+        {
+            return true;
+        }
+    }
+}
+
+
+/**
+ * Write a description of class Queen here.
+ *
+ * @author (your name)
+ * @version (a version number or a date)
+ */
+public class Queen extends Piece
+{
+    public int[] newPosition;
+    public Queen(String icon, String type, int[] position, boolean white, int[] finalPos)
+    {
+        super(icon, type, position, white, finalPos);
+        newPosition = finalPos;
+    }   
+    public static boolean checkMove(int[] startPos, int[] endPos)
+    {
+        if ((endPos[0] == startPos[0]) || (endPos[1] == startPos[1]) || ((endPos[0] - startPos[0]) == (endPos[1] - startPos[1])))
+        {
+            return true;
+        }
+        else 
+        {
+            return false;
+        }
+    }
+}
+
+
+/**
+ * Write a description of class King here.
+ *
+ * @author (your name)
+ * @version (a version number or a date)
+ */
+public class King extends Piece
+{
+    public int[] newPosition;
+    public King(String icon, String type, int[] position, boolean white, int[] finalPos)
+    {
+        super(icon, type, position, white, finalPos);
+        newPosition = finalPos;
+    }   
+    public static boolean checkMove(int[] startPos, int[] endPos)
+    {
+        if (Math.abs(endPos[0] - startPos[0]) <= 1 && Math.abs(endPos[1] - startPos[1]) <= 1)
+        {
+            if ((endPos[0] == startPos[0]) || (endPos[1] == startPos[1]) || (Math.abs(endPos[0] - startPos[0]) == Math.abs(endPos[1] - startPos[1])))
+            {
+                return true;
+            }
+            return false;
+        }
+        else 
+        {
+            return false;
+        }
+    }
+}
