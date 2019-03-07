@@ -1,0 +1,112 @@
+
+/**
+ * Write a description of interface NumberFormatter here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public interface NumberFormatter
+{
+    String format(int n);
+}
+
+
+/**
+ * Write a description of class DefaultFormatter here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class DefaultFormatter implements NumberFormatter
+{
+    private int n;
+    public DefaultFormatter(int n)
+    {
+        this.n = n;
+    }
+    public String format(int n)
+    {
+        return "" + n;
+    }
+}
+
+
+/**
+ * Write a description of class DecimalSeparatorFormatter here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class DecimalSeparatorFormatter implements NumberFormatter
+{
+    private int n;
+    public DecimalSeparatorFormatter(int n)
+    {
+        this.n = n;
+    }
+    public String format(int n)
+    {
+        String num = Integer.toString(n);
+        String result = "";
+        for (int i = num.length()-1; i >= 0; i -= 3)
+        {
+            if (i < 3)
+            {
+                result = num.substring(0, i + 1) + result;
+            }
+            else
+            {
+                result = "," + num.substring(i - 2, i + 1) + result;
+            }
+        }
+        return result;
+    }
+}
+
+
+/**
+ * Write a description of class AccountingFormatter here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class AccountingFormatter implements NumberFormatter
+{
+    private int n;
+    public AccountingFormatter(int n)
+    {
+        this.n = n;
+    }
+    public String format(int n)
+    {
+        if (n < 0)
+        {
+            String str = Integer.toString(n);
+            return "(" + str.substring(1,str.length()) + ")";
+        }
+        else
+        {
+            return "" + n;
+        }
+    }
+}
+
+
+/**
+ * Write a description of class BaseFormatter here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class BaseFormatter
+{
+    private int n;
+    public BaseFormatter(int n)
+    {
+        this.n = n;
+    }
+    public String format(int n)
+    {
+        return "";
+    }
+}
