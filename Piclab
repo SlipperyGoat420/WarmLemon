@@ -1,0 +1,118 @@
+  public void sort()
+  {
+        Pixel[][] pixels = this.getPixels2D();
+        List<Pixel> pixelList = new ArrayList<Pixel>();
+        for (Pixel[] row : pixels)
+        {
+            for (Pixel pxl : row)
+            {               
+                pixelList.add(pxl);            
+            }
+        }    
+        for (int i = 1; i < pixelList.size(); i++)
+        {            
+            int temp = pixelList.get(i).getRGBValue();
+            int j = i - 1;
+            while (j >= 0 && pixelList.get(j).getRGBValue() > temp)
+            {
+                pixelList.set(j+1, pixelList.get(j));
+                //pixelList.get(j+1).setColor(pixelList.get(j).getColor());
+                j = j - 1;
+                //Color one = pixels[row][col].getColor();
+                //Color two = pixels[row][col+1].getColor();
+                //pixels[row][col].setColor(pixels[row][col+1].getColor());
+                //pixels[row][col+1].setColor(Color.BLACK);
+                //temp.getColor()
+                //Color.BLACK
+            }
+            pixelList.set(j+1, pixelList.get(i));
+            //pixelList.get(j+1).setColor(pixelList.get(temp).getColor());
+        }
+        for (int y = 0; y < pixelList.size(); y++)
+        {
+            System.out.println(pixelList.get(y).getRGBValue());
+        }
+        int z = 0;
+        /**for (int row = 0; row < pixels.length; row++)
+        {
+            for (int col = 0; col < pixels[0].length - 1; col++)
+            {
+                pixels[row][col].setColor(pixelList.get(z).getColor());
+                z++;
+            }
+        } 
+        **/
+  }   
+  
+  /**
+ *   public void sort()
+  {
+        Pixel[][] pixels = this.getPixels2D(); 
+        for (int row = 0; row < pixels.length; row++)
+        {
+            for (int col = 1; col < pixels[0].length - 1; col++)
+            {               
+                Pixel temp = pixels[row][col];
+                int i = col - 1;
+                while (i >= 0 && pixels[row][i].getRGBValue() > pixels[row][col].getRGBValue())
+                {
+                    pixels[row][i+1].setColor(pixels[row][col].getColor());
+                    i = i - 1;
+                    //Color one = pixels[row][col].getColor();
+                    //Color two = pixels[row][col+1].getColor();
+                    //pixels[row][col].setColor(pixels[row][col+1].getColor());
+                    //pixels[row][col+1].setColor(Color.BLACK);
+                    //temp.getColor()
+                    //Color.BLACK
+                }
+                pixels[row][i+1].setColor(temp.getColor());
+            }
+        }         
+  }
+ */
+ 
+   public void sort()
+  {
+        Pixel[][] pixels = this.getPixels2D();
+        List<Pixel> pixelList = new ArrayList<Pixel>();
+        for (Pixel[] row : pixels)
+        {
+            for (Pixel pxl : row)
+            {               
+                pixelList.add(pxl);            
+            }
+        }    
+        for (int i = 1; i < pixelList.size(); i++)
+        {            
+            int temp = pixelList.get(i).getRGBValue();
+            int j = i - 1;
+            while (j >= 0 && pixelList.get(j).getRGBValue() > temp)
+            {
+                pixelList.set(j+1, pixelList.get(j));
+                //pixelList.get(j+1).setColor(pixelList.get(j).getColor());
+                j = j - 1;
+                //Color one = pixels[row][col].getColor();
+                //Color two = pixels[row][col+1].getColor();
+                //pixels[row][col].setColor(pixels[row][col+1].getColor());
+                //pixels[row][col+1].setColor(Color.BLACK);
+                //temp.getColor()
+                //Color.BLACK
+            }
+            pixelList.set(j+1, pixelList.get(i));
+            //pixelList.get(j+1).setColor(pixelList.get(temp).getColor());
+        }
+        for (int y = 0; y < pixelList.size(); y++)
+        {
+            System.out.println(pixelList.get(y).getRGBValue());
+        }
+        int z = 0;
+        /**for (int row = 0; row < pixels.length; row++)
+        {
+            for (int col = 0; col < pixels[0].length - 1; col++)
+            {
+                pixels[row][col].setColor(pixelList.get(z).getColor());
+                z++;
+            }
+        } 
+        **/
+  }   
