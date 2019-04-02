@@ -1,0 +1,71 @@
+
+/**
+ * Write a description of class School here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class School
+{
+    private List<Student> stus;
+    public School() 
+    {
+        List<Student> stus = new ArrayList<Student>();
+    }
+    public void addStudent(Student stu)
+    {
+        if (stus.size() == 0)
+        {
+            stus.add(stu);
+        }
+        for (int i = 0; i < stus.size(); i++)
+        {
+            if (stu.compareTo(stus.get(i+1)) < 0)
+            {
+                stus.add(stu);
+            }
+        }
+    }
+    public boolean isEnrolled(Student stu)
+    {
+        int max = stus.size();
+        int min = 0;
+        int mid = (min + max) / 2;
+        while (stus.get(mid) != stu)
+        {
+            if (stu.compareTo(stus.get(mid)) > 0)
+            {
+                min = mid + 1;
+                mid = (min + max) / 2 + mid;
+            }
+            if (stu.compareTo(stus.get(mid) < 0))
+            {
+                max = mid + 1;
+                mid = (min + max) / 2;
+            }
+            if (stus.get(mid).equals(stu))
+            {
+                return true;
+            }
+        }
+        if (min > max)
+        {
+            return false;
+        }
+        return true;
+    }
+}
+
+
+/**
+ * Write a description of interface Student here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public interface Student
+{
+    String getName();
+    int getID();
+    int compareTo(Object stu);
+}
