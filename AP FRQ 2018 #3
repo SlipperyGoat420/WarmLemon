@@ -1,0 +1,20 @@
+public class CodeWordChecker implements StringChecker
+{
+    private int min = 6;
+    private int max = 20;
+    private String substr;
+    public CodeWordChecker(String substr) 
+    {
+        this.substr = substr;
+    }  
+    public CodeWordChecker(int min, int max, String substr)
+    {
+        this.substr = substr;
+        this.min = min;
+        this.max = max;
+    }
+    public boolean isValid(String str)
+    {
+        return str.length() >= min && str.length() <= max && str.indexOf(substr) == -1;
+    }
+}
