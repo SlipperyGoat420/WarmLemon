@@ -1,0 +1,204 @@
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.Scanner;
+
+public class RubiksCubeTimer {
+    public static void main(String[] args) {
+        try {
+            //Generating a file for the solving session
+            File file = new File("/Users/<HIDDEN>/Desktop/Rubik's Cube Times.txt");
+            if(!file.exists()) {
+                file.createNewFile();
+            }
+
+            FileWriter fw = new FileWriter(file.getAbsoluteFile());
+            BufferedWriter bw = new BufferedWriter(fw);
+
+            DecimalFormat df = new DecimalFormat("0.00");
+            df.setRoundingMode(RoundingMode.DOWN);
+
+            Scanner keyboard = new Scanner(System.in);
+            String userInput;
+
+            //Introduction to the software
+            System.out.println("<HIDDEN>'s Rubik's Cube Timer\n");
+            bw.write("<HIDDEN>'s Rubik's Cube Timer\n\n");
+            printInstructions();
+
+            final int SESSION_LENGTH = 12;
+
+            double[] solveTimes = new double[SESSION_LENGTH];
+
+            for(int i = 1; i <= SESSION_LENGTH; i++) {
+                //Scramble
+                String scramble = generateScramble();
+                System.out.print(scramble);
+
+                userInput = keyboard.nextLine();
+                if(userInput.equalsIgnoreCase("End")) {
+                    System.exit(0);
+                }
+                long startTime = System.currentTimeMillis();
+
+                //At this point, the user solves the cube or cancels the solve
+
+                userInput = keyboard.nextLine();
+                long endTime = System.currentTimeMillis();
+                if(userInput.equalsIgnoreCase("Cancel")) {
+                    i--;
+                    continue;
+                }
+                else if(userInput.equalsIgnoreCase("End")) {
+                    System.exit(0);
+                }
+                else { //Valid Solve
+                    //Formatting time
+                    long solveTimeMilliseconds = endTime - startTime;
+                    double solveTimeSeconds = solveTimeMilliseconds / 1000.0;
+
+                    double solveTime = Math.floor(solveTimeSeconds * 100) / 100.0;
+                    String solveTimeString = df.format(solveTimeSeconds);
+
+                    System.out.println(solveTimeString + "\n");
+                    bw.write(scramble + "\n");
+                    bw.write(solveTimeString + "\n\n");
+
+                    //Setting up array to calculate average
+                    solveTimes[i - 1] = solveTime; //i is 1-indexed
+                }
+            }
+
+            //Formatting session
+            double[] solveTimesOrdered = new double[SESSION_LENGTH];
+            for(int i = 0; i < SESSION_LENGTH; i++) {
+                solveTimesOrdered[i] = solveTimes[i];
+            }           
+            Arrays.sort(solveTimesOrdered);
+            double maximumTime = solveTimesOrdered[0];
+            double minimumTime = solveTimesOrdered[SESSION_LENGTH - 1];
+
+            String[] formattedTimes = new String[SESSION_LENGTH];
+
+            boolean maximumFound = false, minimumFound = false;
+            for(int i = 0; i < SESSION_LENGTH; i++) {
+                if(!maximumFound && solveTimes[i] == maximumTime) {
+                    formattedTimes[i] = "(" + df.format(solveTimes[i]) + ")";
+                    maximumFound = true;
+                }
+                else if(!minimumFound && solveTimes[i] == minimumTime) {
+                    formattedTimes[i] = "(" + df.format(solveTimes[i]) + ")";
+                    minimumFound = true;
+                }
+                else {
+                    formattedTimes[i] = df.format(solveTimes[i]);
+                }
+            }
+            System.out.println(Arrays.toString(formattedTimes));
+            bw.write(Arrays.toString(formattedTimes) + "\n");
+
+            //Calculating average
+            double average = 0;
+            for(int i = 1; i < SESSION_LENGTH - 1; i++) {
+                average += solveTimesOrdered[i];
+            }
+            average = average / (SESSION_LENGTH - 2);
+            average = Math.floor(average * 100) / 100.0;
+            String averageString = df.format(average);
+
+            System.out.println("Average: " + averageString);
+            bw.write("Average: " + averageString + "\n\n");
+
+            //Finish file
+            bw.close();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void printInstructions() {
+        System.out.println(
+            "To begin a solve, press the enter key. The timer will begin running.\n"
+          + "To finish a solve, press the enter key again. The time taken to solve the cube will be displayed.\n"
+          + "To delete a solve, type \"Delete.\"\n"
+          + "To end a solving session, type \"End.\"\n"
+          + "LaTeX code for the session will be generated at the end of the session.\n\n"); //not yet implemented
+    }
+
+    private static String generateScramble() {
+        final int SCRAMBLE_LENGTH = 30;
+        Random rand = new Random();
+
+        //Picking faces to turn
+        int[] scrambleFaceIntArray = new int[SCRAMBLE_LENGTH];
+        for(int i = 0; i < SCRAMBLE_LENGTH; i++) {
+            scrambleFaceIntArray[i] = rand.nextInt(6);
+
+            if(i >= 1) {
+                while(scrambleFaceIntArray[i] == scrambleFaceIntArray[i - 1]) {
+                    scrambleFaceIntArray[i] = rand.nextInt(6);
+                }
+
+                while(i >= 2 && (scrambleFaceIntArray[i] == scrambleFaceIntArray[i - 2] && scrambleFaceIntArray[i] / 2 == scrambleFaceIntArray[i - 1] / 2)) {
+                    scrambleFaceIntArray[i] = rand.nextInt(6);
+                }
+            }
+        }
+
+        //Replacing numbers with letters
+        String[] scrambleFaceArray = new String[SCRAMBLE_LENGTH];
+        for(int i = 0; i < SCRAMBLE_LENGTH; i++) {
+            switch(scrambleFaceIntArray[i]) {
+                case 0: scrambleFaceArray[i] = "U";
+                    break;
+                case 1: scrambleFaceArray[i] = "D";
+                    break;
+                case 2: scrambleFaceArray[i] = "R";
+                    break;
+                case 3: scrambleFaceArray[i] = "L";
+                    break;
+                case 4: scrambleFaceArray[i] = "F";
+                    break;
+                case 5: scrambleFaceArray[i] = "B";
+                    break;
+            }
+        }
+
+        //Picking directions to turn the faces
+        int[] scrambleDirectionIntArray = new int[SCRAMBLE_LENGTH];
+        for(int i = 0; i < SCRAMBLE_LENGTH; i++) {
+            scrambleDirectionIntArray[i] = rand.nextInt(3);
+        }
+
+        //Replacing numbers with directions
+        String[] scrambleDirectionArray = new String[SCRAMBLE_LENGTH];
+        for(int i = 0; i < SCRAMBLE_LENGTH; i++) {
+            switch(scrambleDirectionIntArray[i]) {
+                case 0: scrambleDirectionArray[i] = "";
+                    break;
+                case 1: scrambleDirectionArray[i] = "'";
+                    break;
+                case 2: scrambleDirectionArray[i] = "2";
+                    break;
+            }
+        }
+
+        //Compiling scramble
+        String[] scrambleArray = new String[SCRAMBLE_LENGTH];
+        for(int i = 0; i < SCRAMBLE_LENGTH; i++) {
+            scrambleArray[i] = scrambleFaceArray[i] + scrambleDirectionArray[i] + " ";
+        }
+
+        String scramble = "";
+        for(int i = 0; i < SCRAMBLE_LENGTH; i++) {
+            scramble += scrambleArray[i];
+        }
+
+        return scramble;
+    }
+}
