@@ -1,0 +1,74 @@
+
+/**
+ * Write a description of class timerr here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+import java.util.Timer;
+import java.util.TimerTask;
+
+public class Stopwatch
+{
+    int count = 0;
+    Timer timer = new Timer();
+    TimerTask task = new TimerTask() {
+        public void run() {
+            count++;
+            while (count < 50) {
+            System.out.print(count);
+        }
+        }
+    };
+    public void start() 
+    {
+        timer.scheduleAtFixedRate(task,1000,10000);
+    }
+    
+    public static void main(String[] args)
+    {
+        Stopwatch timer = new Stopwatch();
+        timer.start();
+    }
+}
+
+
+/**
+ * Write a description of class Test here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+import java.awt.event.*;
+import java.util.TimerTask;
+import java.util.Timer;
+import javax.swing.*;
+
+public class Test
+{
+    public static void main(String[] args)
+    {
+        JFrame frame = new JFrame("Help");
+        JLabel label = new JLabel("00:00:000");
+        JButton button = new JButton("Start");
+
+        Stopwatch timer = new Stopwatch();  
+        
+        button.setText("Start");
+        button.setBounds(100,100,90,30);
+        frame.add(button);
+        button.addActionListener(new ActionListener(){  
+            public void actionPerformed(ActionEvent e){  
+                timer.start();
+            }  
+        });
+
+        label.setBounds(100,50,90,30);
+        frame.add(label);
+        
+        frame.setSize(400,400);
+        frame.setLayout(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+        frame.setVisible(true);
+    }
+}
